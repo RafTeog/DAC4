@@ -32,12 +32,14 @@ import javax.ws.rs.core.MediaType;
 import Tarefa2.EdicaoEntity;
 import Tarefa2.EventoEntity;
 import Tarefa2.JPAEdicao;
+import Tarefa2.JPAEvento;
+
 
 /**
  *
  * @author viter
  */
-@Path("eventosapped")
+@Path("edicao")
 public class EdicaoEntityFacadeREST {
     
     private final JsonBuilderFactory factory;
@@ -63,6 +65,7 @@ public class EdicaoEntityFacadeREST {
     }
 
     @POST
+    @Path("{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     public void createJson(String ent) {
         JPAEdicao dao = new JPAEdicao();
@@ -76,15 +79,20 @@ public class EdicaoEntityFacadeREST {
         e.setDataInicio_edicao(json.getString("dtinicio"));
         e.setNumero_edicao(Integer.parseInt(json.getString("numero")));
         e.setAno_edicao(Integer.parseInt(json.getString("ano")));
-        dao.salva(e);
+        Long idEv=Long.parseLong(json.getString("idev"));
+        JPAEvento daoEv = new JPAEvento();
+        EventoEntity Ev = daoEv.recupera(idEv);
+        Ev.addEvento(e);
+        daoEv.salva(Ev);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Long id, EdicaoEntity entity) {
+    public void edit(@PathParam("ided") Long ided, EdicaoEntity entity) {
         JPAEdicao dao = new JPAEdicao();
-        dao.salva(entity);
+        dao.exclui(ided);
+        dao.salva(entity);        
     }
 
     @DELETE
@@ -95,7 +103,7 @@ public class EdicaoEntityFacadeREST {
     }
 
     @GET
-    @Path("entrada/{id}")
+    @Path("edicao/{id}")
     @Produces({MediaType.APPLICATION_XML})
     public EdicaoEntity find(@PathParam("id") Long id) {
         JPAEdicao dao = new JPAEdicao();
@@ -103,7 +111,7 @@ public class EdicaoEntityFacadeREST {
     }
 
     @GET
-    @Path("entrada/{id}")
+    @Path("edicao/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject findJson(@PathParam("id") Long id) {
         JPAEdicao dao = new JPAEdicao();
@@ -115,8 +123,8 @@ public class EdicaoEntityFacadeREST {
                 .add("cidade", e.getCidade_edicao())
                 .add("dtfim", e.getDatafim_edicao())
                 .add("dtfim", e.getDataInicio_edicao())
-                .add("zap", e.getNumero_edicao())
-                .add("zap", e.getAno_edicao())
+                .add("numero", e.getNumero_edicao())
+                .add("ano", e.getAno_edicao())
                 .build();
         return obj;
     }
@@ -124,7 +132,7 @@ public class EdicaoEntityFacadeREST {
 
 
     @GET
-    @Path("entrada/{id}")
+    @Path("edicao/{id}")
     @Produces({MediaType.TEXT_PLAIN})
     public String findplain(@PathParam("id") Long id) {
         JPAEdicao dao = new JPAEdicao();

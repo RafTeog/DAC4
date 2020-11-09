@@ -2,6 +2,7 @@
 package Tarefa2;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -38,7 +39,7 @@ public class EventoEntity implements Serializable {
     @Basic(optional = false, fetch = FetchType.LAZY)
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<EdicaoEntity> ListaEds;
-
+    
     public List<EdicaoEntity> getListaEds() {
         return ListaEds;
     }
@@ -111,6 +112,25 @@ public class EventoEntity implements Serializable {
     public String toString() {
         return "Tarefa2.EventoEntity[ id=" + id_evento + " ]";
     }
-
+    public List<EdicaoEntity> getEventos(){
+        return this.ListaEds;
+    }
+    public void  addEvento(EdicaoEntity ee){
+        this.ListaEds.add(ee);
+    }
+    public void  removeEdicao(Long id){
+        int removeIndex=0;
+        for (Iterator<EdicaoEntity> iterator = ListaEds.iterator(); iterator.hasNext();) {
+            EdicaoEntity next = iterator.next();
+            if(next.getId()==id){
+                ListaEds.remove(removeIndex);
+            }            
+            removeIndex++;
+        }        
+    }
+    public void  updateEvento(EdicaoEntity ee){
+        this.ListaEds.remove(ee.getId());
+        this.ListaEds.add(ee);        
+    }
 }
 //FIM DA CLASSE ENTIDADE EVENTO
