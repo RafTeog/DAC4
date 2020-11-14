@@ -146,6 +146,14 @@ public class EdicaoEntityFacadeREST {
         JPAEdicao dao = new JPAEdicao();
         return dao.ListarTodasEdicoes();
     }
+    
+     @GET
+    @Path("todos/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<EdicaoEntity> findAllEdsEv(@PathParam("id") Long idev) {
+        JPAEdicao dao = new JPAEdicao();
+        return dao.ListarTodasEdicoes(idev);
+    }
 
     @GET
     @Path("anoeds/{sn}")
@@ -153,6 +161,29 @@ public class EdicaoEntityFacadeREST {
     public List<EdicaoEntity> findAll(@PathParam("sn") String sn) {
         JPAEdicao dao = new JPAEdicao();
         return dao.buscaAnoEdicao(Integer.parseInt(sn));
+    }
+    @GET
+    @Path("timestamp/{inidate};{enddate}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Object> findAllBetweenDates(@PathParam("inidate") String inidate,@PathParam("enddate") String enddate) {
+        JPAEdicao dao = new JPAEdicao();        
+        return dao.buscaEdicoesTimeStamp(inidate,enddate);
+    }
+    
+    @GET
+    @Path("cidade/{cidade}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Object> findAllinCities(@PathParam("cidade") String cidade) {
+        JPAEdicao dao = new JPAEdicao();        
+        return dao.buscaEdicoesCidade(cidade);
+    }
+    
+    @GET
+    @Path("cidadetimestampe/{cidade}/{inidate};{enddate}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Object> findAllinCitiesTimestamp(@PathParam("cidade") String cidade,@PathParam("inidate") String inidate,@PathParam("enddate") String enddate) {
+        JPAEdicao dao = new JPAEdicao();        
+        return dao.buscaEdicoesCidadeTimestamp(cidade,inidate,enddate);
     }
 
 }
